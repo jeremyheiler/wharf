@@ -58,6 +58,14 @@ keyword and vice versa.
 ;=> {"FooBar" "baz"}
 ```
 
+A complex example.
+
+```clojure
+(transform-keys (comp keyword clojure.string/lower-case camel->dash)
+                {"FooBar" [{"Fancy1" nil "R2D2" nil} {"MoreNo1se" nil}]})
+;=> {:foo-bar [{:fancy1 nil, :r2-d2 nil} {:more-no1se nil}]}
+```
+
 ## License
 
 Copyright © 2013 Jeremy Heiler
