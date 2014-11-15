@@ -43,7 +43,7 @@ One common idiom is to compose functions.
 There are also some case-conversion functions available.
 
 ```clojure
-(transform-keys camel->dash {"FooBar" "baz"})
+(transform-keys camel->hyphen {"FooBar" "baz"})
 ;=> {"foo-bar" "baz"}
 ```
 
@@ -51,23 +51,23 @@ Here is how you would convert a camel-case string to a dash-case
 keyword and vice versa.
 
 ```clojure
-(transform-keys (comp keyword clojure.string/lower-case camel->dash) {"FooBar" "baz"})
+(transform-keys (comp keyword clojure.string/lower-case camel->hyphen) {"FooBar" "baz"})
 ;=> {:foo-bar "baz"}
 
-(transform-keys (comp dash->upper-camel name) {:foo-bar "baz"})
+(transform-keys (comp hyphen->upper-camel name) {:foo-bar "baz"})
 ;=> {"FooBar" "baz"}
 ```
 
 A complex example.
 
 ```clojure
-(transform-keys (comp keyword clojure.string/lower-case camel->dash)
+(transform-keys (comp keyword clojure.string/lower-case camel->hyphen)
                 {"FooBar" [{"Fancy1" nil "R2D2" nil} {"MoreNo1se" nil}]})
 ;=> {:foo-bar [{:fancy1 nil, :r2-d2 nil} {:more-no1se nil}]}
 ```
 
 ## License
 
-Copyright © 2013 Jeremy Heiler
+Copyright © 2014 Jeremy Heiler
 
 Distributed under the Eclipse Public License, the same as Clojure.
