@@ -4,8 +4,8 @@
 unload.
 
 Wharf is a Clojure library for transforming map keys. It uses
-`clojure.walk/postwalk` and comes bundled with many key trasnformers.
-The use case that pushed Wharf into existance is to be able to
+`clojure.walk/postwalk` and comes bundled with many key transformers.
+The use case that pushed Wharf into existence is to be able to
 subscribe to and publish JSON APIs with out littering your Clojure
 code with underscores and camel case variables.
 
