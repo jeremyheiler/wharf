@@ -45,14 +45,20 @@
   (split-on-hyphen (.replaceAll s "([a-z\\d])([A-Z])" "$1-$2")))
 
 (defn camel->hyphen
-  ([s]
-     (camel->hyphen s true))
-  ([s sticky-caps]
-     (string/join "-" (split-camel-case s))))
+  [s]
+  (string/join "-" (split-camel-case s)))
+
+(defn camel-sticky->hyphen
+  [s]
+  (string/join "-" (split-camel-case-sticky s)))
 
 (defn camel->underscore
   [s]
   (string/join "_" (split-camel-case s)))
+
+(defn camel-sticky->underscore
+  [s]
+  (string/join "_" (split-camel-case-sticky s)))
 
 (defn hyphen->upper-camel
   [s]

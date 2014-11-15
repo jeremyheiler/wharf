@@ -39,6 +39,39 @@
   (is (= "foo1-Bar" (camel->hyphen "foo1Bar")))
   (is (= "Foo-No1se" (camel->hyphen "FooNo1se"))))
 
+(deftest test-camel-sticky->hyphen
+  (is (empty? (camel-sticky->hyphen "")))
+  (is (= "a" (camel-sticky->hyphen "a")))
+  (is (= "foo" (camel-sticky->hyphen "foo")))
+  (is (= "Foo-Bar" (camel-sticky->hyphen "FooBar")))
+  (is (= "foo-Bar" (camel-sticky->hyphen "fooBar")))
+  (is (= "IFoo" (camel-sticky->hyphen "IFoo")))
+  (is (= "OAuth-Foo" (camel-sticky->hyphen "OAuthFoo")))
+  (is (= "foo1-Bar" (camel-sticky->hyphen "foo1Bar")))
+  (is (= "Foo-No1se" (camel-sticky->hyphen "FooNo1se"))))
+
+(deftest test-camel->underscore
+  (is (empty? (camel->underscore "")))
+  (is (= "a" (camel->underscore "a")))
+  (is (= "foo" (camel->underscore "foo")))
+  (is (= "Foo_Bar" (camel->underscore "FooBar")))
+  (is (= "foo_Bar" (camel->underscore "fooBar")))
+  (is (= "I_Foo" (camel->underscore "IFoo")))
+  (is (= "SQL_Foo" (camel->underscore "SQLFoo")))
+  (is (= "foo1_Bar" (camel->underscore "foo1Bar")))
+  (is (= "Foo_No1se" (camel->underscore "FooNo1se"))))
+
+(deftest test-camel-sticky->underscore
+  (is (empty? (camel-sticky->underscore "")))
+  (is (= "a" (camel-sticky->underscore "a")))
+  (is (= "foo" (camel-sticky->underscore "foo")))
+  (is (= "Foo_Bar" (camel-sticky->underscore "FooBar")))
+  (is (= "foo_Bar" (camel-sticky->underscore "fooBar")))
+  (is (= "IFoo" (camel-sticky->underscore "IFoo")))
+  (is (= "OAuth_Foo" (camel-sticky->underscore "OAuthFoo")))
+  (is (= "foo1_Bar" (camel-sticky->underscore "foo1Bar")))
+  (is (= "Foo_No1se" (camel-sticky->underscore "FooNo1se"))))
+
 (deftest test-hyphen->underscore
   (is (empty? (hyphen->underscore "")))
   (is (= "a" (hyphen->underscore "a")))
