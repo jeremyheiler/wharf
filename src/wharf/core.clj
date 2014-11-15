@@ -1,7 +1,6 @@
 (ns wharf.core
   (:require [clojure.string :as string]
-            [clojure.walk :as walk]
-            [blancas.kern.core :refer :all]))
+            [clojure.walk :as walk]))
 
 (defn transform-keys
   "Recursively transforms all map keys in coll with t."
@@ -9,77 +8,90 @@
   (let [f (fn [[k v]] [(t k) v])]
     (walk/postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) coll)))
 
-(defn ^String capitalize
+(defn capitalize
   "Converts the first character of s to upper-case. This differs from
   clojure.string/captialize because it doesn't touch the rest of s."
   [s]
   (str (.toUpperCase (subs s 0 1)) (subs s 1)))
 
-(defn ^String uncapitalize
+(defn uncapitalize
   "Converts the first character of s to lower-case."
   [s]
   (str (.toLowerCase (subs s 0 1)) (subs s 1)))
 
-(defn parse-dash-case
+(defn split-on-hyphen
+  "Splits a string on hyphens."
   [s]
-  (value (sep-by (sym* \-) (<+> letter (many1 (<|> letter digit)))) s))
+  (string/split s #"-"))
 
-(defn parse-underscore-case
+(defn split-on-underscore
+  "Splits a string on undescores."
   [s]
-  (value (sep-by (sym* \_) (<+> letter (many1 (<|> letter digit))))s ))
+  (string/split s #"_"))
 
-(defn parse-camel-case
+(defn split-camel-case
+  "Splits a camel case string into tokens. Consecutive captial lets,
+  except for the last one, become a single token."
   [s]
-  (value (many1 (<+> letter (many0 (<|> lower digit)))) s))
+  (-> s
+      (.replaceAll "([A-Z]+)([A-Z][a-z])" "$1-$2")
+      (.replaceAll "([a-z\\d])([A-Z])" "$1-$2")
+      (split-on-hyphen)))
 
-(defn camel->dash
+(defn split-camel-case-sticky
+  "Splits a camel case string, keeping consecutive capital characters
+  attached to the following token."
   [s]
-  (->> s
-       (parse-camel-case)
-       (string/join "-")))
+  (split-on-hyphen (.replaceAll s "([a-z\\d])([A-Z])" "$1-$2")))
+
+(defn camel->hyphen
+  ([s]
+     (camel->hyphen s true))
+  ([s sticky-caps]
+     (string/join "-" (split-camel-case s))))
 
 (defn camel->underscore
   [s]
-  (->> s
-       (parse-camel-case)
-       (string/join "_")))
+  (string/join "_" (split-camel-case s)))
 
-(defn dash->upper-camel
+(defn hyphen->upper-camel
   [s]
-  (->> s
-       (parse-dash-case)
-       (map capitalize)
-       (string/join)))
+  (if (seq s)
+    (->> s
+         (split-on-hyphen)
+         (map capitalize)
+         (string/join))
+    ""))
 
-(defn dash->lower-camel
+(defn hyphen->lower-camel
   [s]
-  (->> s
-       (parse-dash-case)
-       (map capitalize)
-       (string/join)
-       (uncapitalize)))
+  (if (seq s)
+    (->> s
+         (split-on-hyphen)
+         (map capitalize)
+         (string/join)
+         (uncapitalize))
+    ""))
 
 (defn underscore->upper-camel
   [s]
   (->> s
-       (parse-underscore-case)
+       (split-on-underscore)
        (map capitalize)
        (string/join)))
 
 (defn underscore->lower-camel
   [s]
   (->> s
-       (parse-underscore-case)
+       (split-on-underscore)
        (map capitalize)
        (string/join)
        (uncapitalize)))
 
-(defn dash->underscore
-  "Converts s from dash-case to underscore-case."
+(defn hyphen->underscore
   [s]
   (string/replace s #"-" "_"))
 
-(defn underscore->dash
-  "Converts s from underscore-case to dash-case."
+(defn underscore->hyphen
   [s]
   (string/replace s #"_" "-"))
